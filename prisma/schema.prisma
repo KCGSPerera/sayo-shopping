@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String   @unique
+  role      String?  @default("admin")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("admins")
+}
+
+model Category {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  price       Decimal        @db.Decimal(10, 2)
+  categoryId  String?        @map("category_id") @db.Uuid
+  category    Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  color       String?
+  description Json?          // Array for bullet points
+  isActive    Boolean?       @default(true) @map("is_active")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  images      ProductImage[]
+  orders      Order[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId String? @map("product_id") @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl  String  @map("image_url")
+
+  @@map("product_images")
+}
+
+model Order {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerName   String   @map("customer_name")
+  phone          String
+  address        String
+  productId      String?  @map("product_id") @db.Uuid
+  product        Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  price          Decimal  @db.Decimal(10, 2)
+  orderStatus    String?  @default("Placed") @map("order_status")
+  paymentStatus  String?  @default("Not Paid") @map("payment_status")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@map("orders")
+}
+
+model Contact {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullName    String   @map("full_name")
+  phone1      String
+  phone2      String?
+  address     String
+  email       String
+  description String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("contacts")
+}

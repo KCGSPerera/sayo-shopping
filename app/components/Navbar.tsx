@@ -37,13 +37,26 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Overlay */}
             {isOpen && (
-                <div style={{ padding: '1rem', backgroundColor: 'var(--background)', borderBottom: '1px solid var(--accent-grey)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <Link href="/" onClick={() => setIsOpen(false)}>Home</Link>
-                    <Link href="/jewellery" onClick={() => setIsOpen(false)}>Jewellery</Link>
-                    <Link href="/about" onClick={() => setIsOpen(false)}>About</Link>
-                    <Link href="/contact" onClick={() => setIsOpen(false)}>Contact Us</Link>
+                <div style={{
+                    position: 'fixed',
+                    top: '100px',
+                    left: 0,
+                    width: '100%',
+                    height: 'calc(100vh - 100px)',
+                    backgroundColor: 'white',
+                    zIndex: 99,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '2rem',
+                    gap: '2rem',
+                    animation: 'fadeIn 0.3s ease-out'
+                }}>
+                    <Link href="/" onClick={() => setIsOpen(false)} style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', borderBottom: '1px solid var(--accent-grey)', paddingBottom: '1rem' }}>Home</Link>
+                    <Link href="/jewellery" onClick={() => setIsOpen(false)} style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', borderBottom: '1px solid var(--accent-grey)', paddingBottom: '1rem' }}>Jewellery</Link>
+                    <Link href="/about" onClick={() => setIsOpen(false)} style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', borderBottom: '1px solid var(--accent-grey)', paddingBottom: '1rem' }}>About</Link>
+                    <Link href="/contact" onClick={() => setIsOpen(false)} style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', borderBottom: '1px solid var(--accent-grey)', paddingBottom: '1rem' }}>Contact Us</Link>
                 </div>
             )}
 

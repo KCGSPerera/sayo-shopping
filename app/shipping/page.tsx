@@ -29,9 +29,9 @@ export default function Shipping() {
                     priority
                 />
                 <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)' }}></div>
-                <div className="container-wide" style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', margin: '0 auto' }}>
-                    <h1 style={{ color: 'white', fontSize: 'clamp(3.75rem, 6vw, 4.5rem)', marginBottom: '1rem', letterSpacing: '0.02em', lineHeight: 1.1 }}>Shipping & Delivery</h1>
-                    <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', letterSpacing: '0.05em', opacity: 0.9, fontStyle: 'italic' }}>Swift, secure, and stylishly delivered.</p>
+                <div className="container" style={{ position: 'relative', zIndex: 10, maxWidth: '800px', margin: '0 auto' }}>
+                    <h1 style={{ color: 'white', fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '3rem', textAlign: 'center' }}>Shipping & Delivery</h1>
+                    <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', letterSpacing: '0.05em', opacity: 0.9, fontStyle: 'italic', textAlign: 'center' }}>Swift, secure, and stylishly delivered.</p>
                 </div>
             </div>
 

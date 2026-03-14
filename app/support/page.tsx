@@ -29,10 +29,10 @@ export default function SupportCenter() {
                     priority
                 />
                 <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)' }}></div>
-                <div className="container-wide" style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', margin: '0 auto' }}>
-                    <p style={{ textTransform: "uppercase", letterSpacing: "0.15em", fontSize: "0.875rem", color: "#ddd", marginBottom: "1rem" }}>SUPPORT CENTER</p>
-                    <h1 style={{ color: 'white', fontSize: 'clamp(3.75rem, 6vw, 4.5rem)', marginBottom: '1rem', letterSpacing: '0.02em', lineHeight: 1.1 }}>We’re Here to Help You</h1>
-                    <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', letterSpacing: '0.05em', opacity: 0.9, fontStyle: 'italic' }}>Dedicated assistance for our valued customers.</p>
+                <div className="container" style={{ position: 'relative', zIndex: 10, maxWidth: '800px', margin: '0 auto' }}>
+                    <p style={{ textTransform: "uppercase", letterSpacing: "0.15em", fontSize: "0.875rem", color: "#ddd", marginBottom: "1rem", textAlign: 'center' }}>SUPPORT CENTER</p>
+                    <h1 style={{ color: 'white', fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '3rem', textAlign: 'center' }}>We’re Here to Help You</h1>
+                    <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', letterSpacing: '0.05em', opacity: 0.9, fontStyle: 'italic', textAlign: 'center' }}>Dedicated assistance for our valued customers.</p>
                 </div>
             </div>
 
@@ -140,7 +140,7 @@ export default function SupportCenter() {
                         <div style={{ height: '1px', width: '100%', backgroundColor: '#eee', margin: '2rem 0' }}></div>
 
                         {/* Jewellery Care Section */}
-                        <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+                        <div className="grid jewellery-care-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
                             <div style={{ paddingRight: '2rem' }}>
                                 <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', marginBottom: '1rem', letterSpacing: '-0.02em' }}>Jewellery Care Tips</h2>
                                 <div style={{ width: '60px', height: '2px', backgroundColor: '#000', marginBottom: '3rem' }}></div>
@@ -216,6 +216,18 @@ export default function SupportCenter() {
                     </div>
                 </div>
             </main>
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @media (max-width: 1024px) {
+                    .grid-cols-4 { grid-template-columns: 1fr 1fr !important; }
+                    .jewellery-care-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
+                }
+                @media (max-width: 768px) {
+                    .grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+                    .story-content { padding: 3rem 1.5rem !important; }
+                    .feature-grid { grid-template-columns: 1fr !important; }
+                }
+            `}} />
             <Footer />
         </div>
     );

@@ -2,13 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil, Check, X } from "lucide-react";
 
 export default function Categories() {
     const [categories, setCategories] = useState<any[]>([]);
     const [name, setName] = useState("");
     const [loading, setLoading] = useState(true);
     const [adding, setAdding] = useState(false);
+
+    // Edit state
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editingName, setEditingName] = useState("");
+    const [updating, setUpdating] = useState(false);
 
     useEffect(() => {
         fetchCategories();
@@ -43,6 +48,33 @@ export default function Categories() {
         } else {
             alert("Error deleting category. It might be linked to existing products.");
         }
+    };
+
+    const startEditing = (cat: any) => {
+        setEditingId(cat.id);
+        setEditingName(cat.name);
+    };
+
+    const handleUpdate = async () => {
+        if (!editingName.trim()) return;
+        setUpdating(true);
+        const { error } = await supabase
+            .from('categories')
+            .update({ name: editingName.trim() })
+            .eq('id', editingId);
+
+        if (!error) {
+            setEditingId(null);
+            await fetchCategories();
+        } else {
+            alert("Error updating category name.");
+        }
+        setUpdating(false);
+    };
+
+    const handleCancel = () => {
+        setEditingId(null);
+        setEditingName("");
     };
 
     return (
@@ -86,12 +118,43 @@ export default function Categories() {
                         ) : (
                             categories.map(cat => (
                                 <tr key={cat.id} style={{ borderBottom: '1px solid var(--accent-grey)' }}>
-                                    <td style={{ padding: '1rem' }}>{cat.name}</td>
+                                    <td style={{ padding: '1rem' }}>
+                                        {editingId === cat.id ? (
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={editingName}
+                                                onChange={(e) => setEditingName(e.target.value)}
+                                                autoFocus
+                                                style={{ padding: '0.25rem 0.5rem', width: '100%' }}
+                                            />
+                                        ) : (
+                                            cat.name
+                                        )}
+                                    </td>
                                     <td style={{ padding: '1rem', color: '#666' }}>{new Date(cat.created_at).toLocaleDateString()}</td>
                                     <td style={{ padding: '1rem', textAlign: 'right' }}>
-                                        <button onClick={() => handleDelete(cat.id)} style={{ color: 'var(--error)' }} aria-label="Delete">
-                                            <Trash2 size={18} />
-                                        </button>
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                                            {editingId === cat.id ? (
+                                                <>
+                                                    <button onClick={handleUpdate} style={{ color: 'var(--success)' }} disabled={updating} aria-label="Save">
+                                                        <Check size={18} />
+                                                    </button>
+                                                    <button onClick={handleCancel} style={{ color: '#666' }} aria-label="Cancel">
+                                                        <X size={18} />
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button onClick={() => startEditing(cat)} style={{ color: 'var(--accent-dark)' }} aria-label="Edit">
+                                                        <Pencil size={18} />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(cat.id)} style={{ color: 'var(--error)' }} aria-label="Delete">
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))

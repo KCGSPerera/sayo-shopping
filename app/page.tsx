@@ -11,7 +11,7 @@ export default function Home() {
       <main className="min-h-screen">
         {/* Massive Editorial Hero Section */}
         <section
-          className="hero fade-in"
+          className="hero fade-in hero-section"
           style={{
             minHeight: "90vh",
             position: "relative",
@@ -22,17 +22,18 @@ export default function Home() {
               'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop")',
             backgroundSize: "cover",
             backgroundPosition: "center",
-            paddingBottom: "140px", // Minimum 140px before next section
+            paddingBottom: "140px",
           }}
         >
           <div className="container-wide" style={{ zIndex: 10 }}>
-            <div style={{ maxWidth: "800px" }}>
+            <div className="hero-content" style={{ maxWidth: "800px" }}>
               <h1
+                className="hero-title"
                 style={{
                   color: "white",
                   marginBottom: "2rem",
                   textShadow: "0 4px 20px rgba(0,0,0,0.2)",
-                  fontSize: "clamp(4.5rem, 6vw, 5rem)", // Large serif heading (70-80px)
+                  fontSize: "clamp(3.5rem, 8vw, 5rem)",
                 }}
               >
                 SAYOSHOPPING
@@ -40,19 +41,20 @@ export default function Home() {
               <p
                 style={{
                   color: "white",
-                  fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
+                  fontSize: "clamp(1.125rem, 2vw, 1.5rem)",
                   fontFamily: "var(--font-serif)",
                   marginBottom: "3rem",
                   letterSpacing: "0.05em",
                   fontStyle: "italic",
                   textShadow: "0 2px 10px rgba(0,0,0,0.2)",
+                  lineHeight: 1.4
                 }}
               >
                 Timeless Jewellery for Modern Elegance.
               </p>
               <Link
                 href="/jewellery"
-                className="btn hover-lift"
+                className="btn hover-lift hero-btn"
                 style={{
                   backgroundColor: "black",
                   color: "white",
@@ -66,6 +68,15 @@ export default function Home() {
               </Link>
             </div>
           </div>
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            @media (max-width: 768px) {
+              .hero-section { min-height: 80vh !important; padding-bottom: 80px !important; }
+              .hero-content { text-align: center; margin: 0 auto; }
+              .hero-title { font-size: clamp(3rem, 12vw, 4rem) !important; }
+              .hero-btn { width: 100%; padding: 1rem 2rem !important; }
+            }
+          `}} />
         </section>
 
         {/* SECTION 1 - FEATURED COLLECTION */}
@@ -76,10 +87,9 @@ export default function Home() {
           </div>
 
           <div
-            className="grid"
+            className="grid grid-cols-3"
             style={{
-              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-              gap: "40px", // 40-60px gap
+              gap: "40px",
               alignItems: "stretch"
             }}
           >
@@ -99,11 +109,11 @@ export default function Home() {
                   />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginTop: "auto" }}>
-                  <div>
+                  <div style={{ paddingRight: '1rem' }}>
                     <h3 style={{ fontSize: "1.25rem", margin: "0 0 0.5rem 0", letterSpacing: "0.02em" }}>{product.title}</h3>
                     <p style={{ color: "#666", margin: 0, fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.875rem" }}>18k White Gold</p>
                   </div>
-                  <p style={{ fontSize: "1.125rem", borderBottom: "1px solid black", margin: 0 }}>{product.price}</p>
+                  <p style={{ fontSize: "1.125rem", borderBottom: "1px solid black", margin: 0, whiteSpace: 'nowrap' }}>{product.price}</p>
                 </div>
               </Link>
             ))}
@@ -118,12 +128,12 @@ export default function Home() {
               alt="Heritage Collection"
               fill
               style={{ objectFit: "cover", objectPosition: "center" }}
-              sizes="50vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8vw" }}>
             <div style={{ maxWidth: "550px" }}>
-              <h2 style={{ fontSize: "clamp(3rem, 5vw, 4rem)", marginBottom: "2rem", lineHeight: "1.1" }}>
+              <h2 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", marginBottom: "2rem", lineHeight: "1.1" }}>
                 Crafted for<br />Timeless Beauty
               </h2>
               <p style={{ fontSize: "1.125rem", color: "#555", marginBottom: "3rem", lineHeight: 1.8 }}>
@@ -131,6 +141,7 @@ export default function Home() {
               </p>
               <Link
                 href="/about"
+                className="hover-lift hero-split-link"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -141,7 +152,6 @@ export default function Home() {
                   letterSpacing: "0.15em",
                   fontSize: "0.875rem",
                 }}
-                className="hover-lift"
               >
                 Our Heritage <ArrowRight size={16} style={{ marginLeft: "1rem" }} />
               </Link>
@@ -156,12 +166,12 @@ export default function Home() {
               alt="Bridal Exclusives"
               fill
               style={{ objectFit: "cover", objectPosition: "center" }}
-              sizes="50vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8vw", backgroundColor: "var(--accent-dark)", color: "white" }}>
             <div style={{ maxWidth: "550px" }}>
-              <h2 style={{ fontSize: "clamp(3rem, 5vw, 4rem)", marginBottom: "2rem", color: "white", lineHeight: "1.1" }}>
+              <h2 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", marginBottom: "2rem", color: "white", lineHeight: "1.1" }}>
                 The Bridal<br />Exclusives
               </h2>
               <p style={{ fontSize: "1.125rem", color: "#aaa", marginBottom: "3rem", lineHeight: 1.8 }}>
@@ -169,6 +179,7 @@ export default function Home() {
               </p>
               <Link
                 href="/jewellery?category=bridal"
+                className="hover-lift hero-split-link"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -180,12 +191,17 @@ export default function Home() {
                   fontSize: "0.875rem",
                   color: "white",
                 }}
-                className="hover-lift"
               >
                 View Bridal <ArrowRight size={16} style={{ marginLeft: "1rem" }} />
               </Link>
             </div>
           </div>
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            @media (max-width: 768px) {
+              .hero-split-link { width: 100% !important; justify-content: space-between; }
+            }
+          `}} />
         </section>
 
         {/* SECTION 3 - CATEGORY HIGHLIGHTS */}

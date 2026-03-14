@@ -62,18 +62,19 @@ export default function Jewellery() {
                     <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', marginBottom: '2rem', letterSpacing: '-0.02em' }}>The Collection</h1>
 
                     {/* Horizontal Elegant Filters */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'center', borderTop: '1px solid var(--accent-grey)', borderBottom: '1px solid var(--accent-grey)', padding: '1.5rem 0' }}>
-                        <div style={{ flex: '1 1 200px' }}>
+                    <div className="filter-bar" style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'center', borderTop: '1px solid var(--accent-grey)', borderBottom: '1px solid var(--accent-grey)', padding: '1.5rem 0' }}>
+                        <div className="search-container" style={{ flex: '1 1 200px' }}>
                             <input
                                 type="text"
                                 placeholder="Search pieces..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 style={{ border: 'none', borderBottom: '1px solid var(--foreground)', padding: '0.5rem 0', outline: 'none', fontSize: '1rem', width: '250px', background: 'transparent' }}
+                                className="search-input"
                             />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '2rem', flex: 1, justifyContent: 'flex-end' }}>
+                        <div className="select-container" style={{ display: 'flex', gap: '2rem', flex: 1, justifyContent: 'flex-end' }}>
                             <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} style={{ border: 'none', borderBottom: '1px solid var(--accent-grey)', padding: '0.5rem 0', outline: 'none', background: 'transparent', cursor: 'pointer', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em' }}>
                                 <option value="all">Category</option>
                                 {categories.map(c => (
@@ -102,7 +103,7 @@ export default function Jewellery() {
                     ) : filteredProducts.length === 0 ? (
                         <div className="text-center" style={{ padding: '8rem 0', color: '#666', fontSize: '1.125rem' }}>No pieces found matching your criteria.</div>
                     ) : (
-                        <div className="grid grid-cols-3" style={{ gap: '4rem 2rem' }}>
+                        <div className="grid grid-cols-3 product-grid" style={{ gap: '4rem 2rem' }}>
                             {filteredProducts.map((product) => {
                                 const primaryImage = product.product_images && product.product_images.length > 0
                                     ? product.product_images[0].image_url
@@ -128,12 +129,12 @@ export default function Jewellery() {
                                             </div>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                            <h3 style={{ fontSize: '1.5rem', margin: 0, paddingRight: '1rem', lineHeight: 1.3 }}>
+                                            <h3 style={{ fontSize: '1.25rem', margin: 0, paddingRight: '1rem', lineHeight: 1.3 }}>
                                                 {product.name}
                                             </h3>
-                                            <p style={{ color: 'var(--foreground)', fontSize: '1.125rem', whiteSpace: 'nowrap' }}>Rs. {product.price.toLocaleString()}</p>
+                                            <p style={{ color: 'var(--foreground)', fontSize: '1rem', whiteSpace: 'nowrap', borderBottom: '1px solid black' }}>Rs. {Number(product.price).toLocaleString()}</p>
                                         </div>
-                                        <p style={{ color: '#888', marginTop: '0.5rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: '1rem' }}>
+                                        <p style={{ color: '#888', marginTop: '0.5rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: '0.875rem' }}>
                                             {product.color || 'Classic Collection'}
                                         </p>
                                     </Link>
@@ -142,6 +143,17 @@ export default function Jewellery() {
                         </div>
                     )}
                 </div>
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    @media (max-width: 768px) {
+                        .filter-bar { flex-direction: column; align-items: stretch !important; gap: 1.5rem !important; }
+                        .search-container { flex: none !important; }
+                        .search-input { width: 100% !important; }
+                        .select-container { justify-content: space-between !important; flex: none !important; gap: 1rem !important; }
+                        .select-container select { flex: 1; min-width: 0; }
+                        .product-grid { gap: 2.5rem 1rem !important; }
+                    }
+                `}} />
             </main>
             <Footer />
         </>

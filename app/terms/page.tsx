@@ -29,8 +29,8 @@ export default function TermsAndConditions() {
                     priority
                 />
                 <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.7)' }}></div>
-                <div className="container-wide" style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', margin: '0 auto' }}>
-                    <h1 style={{ color: '#111', fontSize: 'clamp(3.75rem, 6vw, 4.5rem)', marginBottom: '1rem', letterSpacing: '0.02em', lineHeight: 1.1 }}>Terms & Conditions</h1>
+                <div className="container" style={{ position: 'relative', zIndex: 10, maxWidth: '800px', margin: '0 auto' }}>
+                    <h1 style={{ color: '#111', fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '3rem', textAlign: 'center' }}>Terms & Conditions</h1>
                     <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', letterSpacing: '0.05em', opacity: 0.9, fontStyle: 'italic', color: '#555' }}>Clarity and commitment to our customers.</p>
                 </div>
             </div>

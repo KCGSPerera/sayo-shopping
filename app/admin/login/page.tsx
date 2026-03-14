@@ -33,7 +33,7 @@ export default function AdminLogin() {
     return (
         <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f0f0' }}>
             <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-subtle)', width: '100%', maxWidth: '400px' }}>
-                <h1 style={{ fontFamily: 'var(--font-serif)', textAlign: 'center', marginBottom: '0.5rem' }}>Sayoshopping Admin</h1>
+                <h1 style={{ fontFamily: 'var(--font-serif)', textAlign: 'center', marginBottom: '0.5rem' }}>Sayo Admin</h1>
                 <p style={{ textAlign: 'center', color: '#666', marginBottom: '2rem' }}>Sign in to manage your store</p>
 
                 {error && <div style={{ backgroundColor: '#fee2e2', color: '#991b1b', padding: '0.75rem', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.875rem' }}>{error}</div>}

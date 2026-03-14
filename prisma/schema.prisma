@@ -27,12 +27,14 @@ model Category {
 
 model Product {
   id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String?        @unique
   name        String
   price       Decimal        @db.Decimal(10, 2)
   categoryId  String?        @map("category_id") @db.Uuid
   category    Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   color       String?
   description Json?          // Array for bullet points
+  quantity    Int            @default(0)
   isActive    Boolean?       @default(true) @map("is_active")
   createdAt   DateTime       @default(now()) @map("created_at")
   images      ProductImage[]

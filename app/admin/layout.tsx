@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Package, Tag, ShoppingCart, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, Package, Tag, ShoppingCart, LogOut, Users, KeyRound } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
@@ -76,6 +76,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </Link>
                     <Link href="/admin/register" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', borderRadius: '0', backgroundColor: pathname.includes('/admin/register') ? 'rgba(255,255,255,0.05)' : 'transparent', color: pathname.includes('/admin/register') ? 'white' : '#888', transition: 'var(--transition-smooth)' }}>
                         <Users size={20} /> <span style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.875rem' }}>Admins</span>
+                    </Link>
+                    <Link href="/admin/reset-password" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', borderRadius: '0', backgroundColor: pathname.includes('/admin/reset-password') ? 'rgba(255,255,255,0.05)' : 'transparent', color: pathname.includes('/admin/reset-password') ? 'white' : '#888', transition: 'var(--transition-smooth)' }}>
+                        <KeyRound size={20} /> <span style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.875rem' }}>Reset Password</span>
                     </Link>
                 </nav>
 

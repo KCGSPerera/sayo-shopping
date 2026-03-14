@@ -44,8 +44,40 @@ export default function Contact() {
 
         if (!error) {
             setSuccess(true);
-            setFormData({ fullName: '', phone1: '', phone2: '', email: '', address: '', description: '' });
-            setTimeout(() => setSuccess(false), 5000);
+
+            // Send Email Notification
+            try {
+                await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+            } catch (emailErr) {
+                console.error("Failed to send email notification:", emailErr);
+            }
+
+            // Construct WhatsApp Message
+            const whatsappNumber = "94715804185";
+            const message = `*New Inquiry via Sayoshopping Website*
+
+Name: ${formData.fullName}
+Email: ${formData.email}
+Phone 1: ${formData.phone1}
+Phone 2: ${formData.phone2 || 'N/A'}
+Address: ${formData.address}
+
+Message:
+${formData.description}`;
+
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+            // Redirect after a short delay so the success message is visible
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+                setFormData({ fullName: '', phone1: '', phone2: '', email: '', address: '', description: '' });
+                setSuccess(false);
+            }, 1000);
+
         } else {
             alert("There was an error submitting your message. Please try again.");
         }

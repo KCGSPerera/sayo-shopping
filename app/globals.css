@@ -138,7 +138,6 @@ button {
 .container {
   width: 100%;
   max-width: 1400px;
-  /* Wider standard container */
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -148,6 +147,14 @@ button {
   max-width: 1500px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+@media (max-width: 640px) {
+
+  .container,
+  .container-wide {
+    padding: 0 1.25rem;
+  }
 }
 
 .text-center {
@@ -175,12 +182,32 @@ button {
   grid-template-columns: repeat(4, 1fr);
 }
 
+/* Mobile Responsive Grid Scaling */
+@media (max-width: 1024px) {
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
 
   .grid-cols-2,
-  .grid-cols-3,
+  .grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+
   .grid-cols-4 {
     grid-template-columns: 1fr;
+  }
+
+  .py-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .py-section-large {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
   }
 }
 
@@ -214,7 +241,6 @@ button {
 /* Layout Padding */
 .py-section {
   padding-top: 7.5rem;
-  /* 120px */
   padding-bottom: 7.5rem;
 }
 
@@ -237,6 +263,41 @@ button {
 @media (max-width: 1024px) {
   .split-layout {
     grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .split-layout>div {
+    min-height: 400px;
+  }
+
+  .split-layout>div:nth-child(2) {
+    padding: 4rem 1.25rem !important;
+  }
+}
+
+/* Mobile Utility Classes */
+.mobile-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 769px) {
+  .mobile-stack {
+    flex-direction: row;
+  }
+}
+
+.hide-on-mobile {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.show-on-mobile {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block !important;
   }
 }
 

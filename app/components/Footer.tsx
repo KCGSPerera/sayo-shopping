@@ -52,7 +52,10 @@ export default function Footer() {
             </div>
 
             <div className="container-wide footer-bottom" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#666', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
-                <p>&copy; {new Date().getFullYear()} Sayoshopping. All rights reserved.</p>
+                <div>
+                    <p>&copy; {new Date().getFullYear()} Sayo Shopping. All rights reserved.</p>
+                    <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>Design & Developed by PIXOR DEV</p>
+                </div>
                 <div style={{ display: 'flex', gap: '2rem' }}>
                     <span>Colombo, Sri Lanka</span>
                 </div>

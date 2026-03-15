@@ -2,14 +2,17 @@
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { useSearchParams } from "next/navigation";
 
-export default function Jewellery() {
+function JewelleryContent() {
     const [products, setProducts] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const initialCategory = searchParams.get('category');
 
     // Filters
     const [search, setSearch] = useState("");
@@ -22,10 +25,19 @@ export default function Jewellery() {
         async function fetchData() {
             // Fetch categories
             const { data: cats } = await supabase.from('categories').select('*');
-            if (cats) setCategories(cats);
+            if (cats) {
+                setCategories(cats);
+
+                // Handle initial category filter from URL name
+                if (initialCategory) {
+                    const matchedCat = cats.find(c => c.name.toLowerCase() === initialCategory.toLowerCase());
+                    if (matchedCat) {
+                        setCategoryFilter(matchedCat.id);
+                    }
+                }
+            }
 
             // Fetch products with their primary image
-            // Note: is_active filtering is handled by RLS, but we can explicitly request it
             const { data: prods } = await supabase
                 .from('products')
                 .select(`
@@ -38,7 +50,7 @@ export default function Jewellery() {
             setLoading(false);
         }
         fetchData();
-    }, []);
+    }, [initialCategory]);
 
     const filteredProducts = products.filter(p => {
         const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
@@ -157,5 +169,13 @@ export default function Jewellery() {
             </main>
             <Footer />
         </>
+    );
+}
+
+export default function Jewellery() {
+    return (
+        <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>}>
+            <JewelleryContent />
+        </Suspense>
     );
 }

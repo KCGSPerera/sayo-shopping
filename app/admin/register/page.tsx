@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { Eye, EyeOff, Lock, ShieldCheck } from "lucide-react";
 
 export default function AdminRegistration() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -16,13 +20,13 @@ export default function AdminRegistration() {
         setError(null);
         setSuccess(false);
 
-        // Creates user in Supabase Auth. Because we require admin to be logged in,
-        // we use the normal signUp. Note: Supabase's default behavior sends a confirmation email
-        // if email confirmations are enabled. For a production admin setup, you might use 
-        // a backend service role key to invite users securely, but for this boilerplate,
-        // this standard signUp works if email confirmations are disabled or auto-confirmed on free tier.
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            setLoading(false);
+            return;
+        }
 
-        // Also add to admins table for role tracking
+        // Creates user in Supabase Auth.
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email,
             password,
@@ -41,8 +45,6 @@ export default function AdminRegistration() {
             ]);
 
             if (dbError) {
-                // It's possible the user is created but table insert fails if RLS is strict without service role
-                // in free tier with client, but we will ignore the complex fallback for now.
                 console.warn(dbError);
             }
         }
@@ -50,6 +52,7 @@ export default function AdminRegistration() {
         setSuccess(true);
         setEmail("");
         setPassword("");
+        confirmPassword !== "" && setConfirmPassword("");
         setLoading(false);
     };
 
@@ -74,19 +77,57 @@ export default function AdminRegistration() {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
-                    <div className="form-group" style={{ marginBottom: '2rem' }}>
-                        <label className="form-label">Password (Min 6 characters)</label>
-                        <input
-                            type="password"
-                            required
-                            minLength={6}
-                            className="form-input"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+
+                    <div className="form-group">
+                        <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Lock size={16} /> Password (Min 6 characters)
+                        </label>
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                required
+                                minLength={6}
+                                className="form-input"
+                                style={{ paddingRight: '3rem' }}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                    <div className="form-group" style={{ marginBottom: '2.5rem' }}>
+                        <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <ShieldCheck size={16} /> Confirm Password
+                        </label>
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                required
+                                className="form-input"
+                                style={{ paddingRight: '3rem' }}
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                            >
+                                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%' }}>
                         {loading ? 'Registering...' : 'Create Admin Account'}
                     </button>
                 </form>

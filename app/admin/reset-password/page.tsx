@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { KeyRound, Mail, AlertTriangle } from "lucide-react";
+import { KeyRound, Mail, AlertTriangle, Eye, EyeOff, ShieldCheck } from "lucide-react";
 
 export default function ResetPassword() {
     const [email, setEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -103,27 +105,51 @@ export default function ResetPassword() {
                         <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <KeyRound size={16} /> New Password
                         </label>
-                        <input
-                            type="password"
-                            required
-                            minLength={6}
-                            placeholder="Min. 6 characters"
-                            className="form-input"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showNewPassword ? "text" : "password"}
+                                required
+                                minLength={6}
+                                placeholder="Min. 6 characters"
+                                className="form-input"
+                                style={{ paddingRight: '3rem' }}
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                            >
+                                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="form-group" style={{ marginBottom: '2.5rem' }}>
-                        <label className="form-label">Confirm New Password</label>
-                        <input
-                            type="password"
-                            required
-                            placeholder="Repeat new password"
-                            className="form-input"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
+                        <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <ShieldCheck size={16} /> Confirm New Password
+                        </label>
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                required
+                                placeholder="Repeat new password"
+                                className="form-input"
+                                style={{ paddingRight: '3rem' }}
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                            >
+                                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                     </div>
 
                     <button

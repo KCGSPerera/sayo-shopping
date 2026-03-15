@@ -88,6 +88,25 @@ export default function Orders() {
 
         if (currentOrderId) {
             // Update
+            const originalOrder = orders.find(o => o.id === currentOrderId);
+            if (originalOrder && originalOrder.order_status !== formData.order_status) {
+                // If changing TO Cancelled, restock
+                if (formData.order_status === 'Cancelled' && formData.product_id) {
+                    const product = products.find(p => p.id === formData.product_id);
+                    if (product) {
+                        const newQuantity = (product.quantity || 0) + 1;
+                        await supabase.from('products').update({ quantity: newQuantity }).eq('id', product.id);
+                    }
+                }
+                // If changing FROM Cancelled to something else, deduct stock
+                else if (originalOrder.order_status === 'Cancelled' && formData.order_status !== 'Cancelled' && formData.product_id) {
+                    const product = products.find(p => p.id === formData.product_id);
+                    if (product) {
+                        const newQuantity = (product.quantity || 0) - 1;
+                        await supabase.from('products').update({ quantity: Math.max(0, newQuantity) }).eq('id', product.id);
+                    }
+                }
+            }
             await supabase.from('orders').update(payload).eq('id', currentOrderId);
         } else {
             // Insert
@@ -111,7 +130,19 @@ export default function Orders() {
     const handleCancelClick = async (id: string, currentStatus: string) => {
         if (currentStatus === 'Cancelled') return;
         if (confirm("Are you sure you want to cancel this order?")) {
+            // 1. Update order status
             await supabase.from('orders').update({ order_status: 'Cancelled' }).eq('id', id);
+
+            // 2. Restock inventory
+            const order = orders.find(o => o.id === id);
+            if (order && order.product_id) {
+                const product = products.find(p => p.id === order.product_id);
+                if (product) {
+                    const newQuantity = (product.quantity || 0) + 1;
+                    await supabase.from('products').update({ quantity: newQuantity }).eq('id', product.id);
+                }
+            }
+
             await fetchOrdersAndProducts();
         }
     };

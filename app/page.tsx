@@ -1,10 +1,24 @@
+"use client";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data } = await supabase.from('categories').select('*').order('name', { ascending: true });
+      if (data) setCategories(data);
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -205,64 +219,66 @@ export default function Home() {
         </section>
 
         {/* SECTION 3 - CATEGORY HIGHLIGHTS */}
-        <section className="py-section-large container-wide fade-in" style={{ borderTop: "1px solid var(--accent-grey)", marginTop: "120px" }}>
-          <div className="text-center" style={{ marginBottom: "5rem" }}>
-            <h2 className="text-serif" style={{ fontSize: "clamp(2.5rem, 4vw, 3.5rem)" }}>Shop by Category</h2>
-          </div>
+        {categories.length > 0 && (
+          <section className="py-section-large container-wide fade-in" style={{ borderTop: "1px solid var(--accent-grey)", marginTop: "120px" }}>
+            <div className="text-center" style={{ marginBottom: "5rem" }}>
+              <h2 className="text-serif" style={{ fontSize: "clamp(2.5rem, 4vw, 3.5rem)" }}>Shop by Category</h2>
+            </div>
 
-          <div className="grid grid-cols-3" style={{ gap: "2rem" }}>
-            {[
-              { name: "Necklaces", image: "/assets/categories/necklaces.jpg" },
-              { name: "Rings", image: "/assets/categories/rings.jpg" },
-              { name: "Earrings", image: "/assets/categories/earrings.jpg" }
-            ].map((category) => (
-              <Link href={`/jewellery?category=${category.name.toLowerCase()}`} key={category.name} className="group" style={{ position: "relative", display: "block", aspectRatio: "3/4", overflow: "hidden" }}>
-                <Image
-                  src={category.image}
-                  alt={category.name}
-                  fill
-                  style={{ objectFit: "cover", objectPosition: "center", transition: "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)" }}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    backgroundColor: "rgba(0,0,0,0.2)",
-                    transition: "background-color 0.3s ease",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                  className="group-hover:bg-black/40"
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    zIndex: 10
-                  }}
-                >
-                  <h3
+            <div className="grid grid-cols-3" style={{ gap: "2rem" }}>
+              {categories.map((category) => (
+                <Link href={`/jewellery?category=${category.name.toLowerCase()}`} key={category.id} className="group" style={{ position: "relative", display: "block", aspectRatio: "3/4", overflow: "hidden" }}>
+                  {category.image_url ? (
+                    <Image
+                      src={category.image_url}
+                      alt={category.name}
+                      fill
+                      style={{ objectFit: "cover", objectPosition: "center", transition: "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)" }}
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', backgroundColor: 'var(--accent-light)' }}></div>
+                  )}
+                  <div
                     style={{
-                      color: "white",
-                      margin: 0,
-                      fontSize: "clamp(2rem, 3vw, 2.5rem)",
-                      textShadow: "0 2px 10px rgba(0,0,0,0.3)",
-                      transition: "transform 0.3s ease",
+                      position: "absolute",
+                      inset: 0,
+                      backgroundColor: "rgba(0,0,0,0.2)",
+                      transition: "background-color 0.3s ease",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
                     }}
-                    className="group-hover:scale-105"
+                    className="group-hover:bg-black/40"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      zIndex: 10
+                    }}
                   >
-                    {category.name}
-                  </h3>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+                    <h3
+                      style={{
+                        color: "white",
+                        margin: 0,
+                        fontSize: "clamp(2rem, 3vw, 2.5rem)",
+                        textShadow: "0 2px 10px rgba(0,0,0,0.3)",
+                        transition: "transform 0.3s ease",
+                      }}
+                      className="group-hover:scale-105"
+                    >
+                      {category.name}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
       <Footer />
     </>

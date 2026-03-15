@@ -10,13 +10,26 @@ import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const [categories, setCategories] = useState<any[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const { data } = await supabase.from('categories').select('*').order('name', { ascending: true });
-      if (data) setCategories(data);
+    const fetchData = async () => {
+      // Fetch categories
+      const { data: catData } = await supabase.from('categories').select('*').order('name', { ascending: true });
+      if (catData) setCategories(catData);
+
+      // Fetch featured products
+      const { data: featData } = await supabase
+        .from('featured_products')
+        .select(`
+          slot,
+          image_url,
+          product:products(id, name, price)
+        `)
+        .order('slot');
+      if (featData) setFeaturedProducts(featData);
     };
-    fetchCategories();
+    fetchData();
   }, []);
 
   return (
@@ -107,30 +120,55 @@ export default function Home() {
               alignItems: "stretch"
             }}
           >
-            {[
-              { id: 1, title: "Diamond Solitaire Ring", price: "Rs. 45,000", image: "/assets/home/diamond-solitaire-ring.jpg" },
-              { id: 2, title: "Emerald Drop Necklace", price: "Rs. 85,000", image: "/assets/home/emerald-drop-necklace.jpg" },
-              { id: 3, title: "Pearl Estate Earrings", price: "Rs. 32,000", image: "/assets/home/pearl-estate-earrings.jpg" }
-            ].map((product) => (
-              <Link href={`/product/${product.id}`} key={product.id} className="hover-lift group" style={{ display: "flex", flexDirection: "column" }}>
-                <div className="hover-zoom" style={{ backgroundColor: "var(--accent-light)", aspectRatio: "4/5", marginBottom: "1.5rem", position: "relative", overflow: "hidden" }}>
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    style={{ objectFit: "cover", objectPosition: "center" }}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginTop: "auto" }}>
-                  <div style={{ paddingRight: '1rem' }}>
-                    <h3 style={{ fontSize: "1.25rem", margin: "0 0 0.5rem 0", letterSpacing: "0.02em" }}>{product.title}</h3>
-                    <p style={{ color: "#666", margin: 0, fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.875rem" }}>18k White Gold</p>
+            {featuredProducts.length > 0 ? (
+              featuredProducts.map((item) => (
+                <Link href={`/product/${item.product?.id}`} key={item.slot} className="hover-lift group" style={{ display: "flex", flexDirection: "column" }}>
+                  <div className="hover-zoom" style={{ backgroundColor: "var(--accent-light)", aspectRatio: "4/5", marginBottom: "1.5rem", position: "relative", overflow: "hidden" }}>
+                    <Image
+                      src={item.image_url || "/assets/placeholder.jpg"}
+                      alt={item.product?.name || "Featured Product"}
+                      fill
+                      style={{ objectFit: "cover", objectPosition: "center" }}
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
                   </div>
-                  <p style={{ fontSize: "1.125rem", borderBottom: "1px solid black", margin: 0, whiteSpace: 'nowrap' }}>{product.price}</p>
-                </div>
-              </Link>
-            ))}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginTop: "auto" }}>
+                    <div style={{ paddingRight: '1rem' }}>
+                      <h3 style={{ fontSize: "1.25rem", margin: "0 0 0.5rem 0", letterSpacing: "0.02em" }}>{item.product?.name}</h3>
+                      <p style={{ color: "#666", margin: 0, fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.875rem" }}>Exclusive Collection</p>
+                    </div>
+                    <p style={{ fontSize: "1.125rem", borderBottom: "1px solid black", margin: 0, whiteSpace: 'nowrap' }}>
+                      Rs. {item.product?.price ? parseFloat(item.product.price).toLocaleString() : '0'}
+                    </p>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              [
+                { id: 1, title: "Diamond Solitaire Ring", price: "Rs. 45,000", image: "/assets/home/diamond-solitaire-ring.jpg" },
+                { id: 2, title: "Emerald Drop Necklace", price: "Rs. 85,000", image: "/assets/home/emerald-drop-necklace.jpg" },
+                { id: 3, title: "Pearl Estate Earrings", price: "Rs. 32,000", image: "/assets/home/pearl-estate-earrings.jpg" }
+              ].map((product) => (
+                <Link href={`/product/${product.id}`} key={product.id} className="hover-lift group" style={{ display: "flex", flexDirection: "column" }}>
+                  <div className="hover-zoom" style={{ backgroundColor: "var(--accent-light)", aspectRatio: "4/5", marginBottom: "1.5rem", position: "relative", overflow: "hidden" }}>
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fill
+                      style={{ objectFit: "cover", objectPosition: "center" }}
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginTop: "auto" }}>
+                    <div style={{ paddingRight: '1rem' }}>
+                      <h3 style={{ fontSize: "1.25rem", margin: "0 0 0.5rem 0", letterSpacing: "0.02em" }}>{product.title}</h3>
+                      <p style={{ color: "#666", margin: 0, fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.875rem" }}>18k White Gold</p>
+                    </div>
+                    <p style={{ fontSize: "1.125rem", borderBottom: "1px solid black", margin: 0, whiteSpace: 'nowrap' }}>{product.price}</p>
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
         </section>
 

@@ -18,7 +18,7 @@ export default function Navbar() {
 
                 {/* Logo */}
                 <Link href="/" style={{ fontSize: '1.75rem', fontFamily: 'var(--font-serif)', fontWeight: 400, letterSpacing: '0.1em' }}>
-                    SAYOSHOPPING
+                    SAYO SHOPPING
                 </Link>
 
                 {/* Desktop Menu */}

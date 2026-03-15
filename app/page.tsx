@@ -50,7 +50,7 @@ export default function Home() {
                   fontSize: "clamp(3.5rem, 8vw, 5rem)",
                 }}
               >
-                SAYOSHOPPING
+                SAYO SHOPPING
               </h1>
               <p
                 style={{
@@ -64,7 +64,7 @@ export default function Home() {
                   lineHeight: 1.4
                 }}
               >
-                Timeless Jewellery for Modern Elegance.
+                BROWSE, BUY, BLISS...
               </p>
               <Link
                 href="/jewellery"

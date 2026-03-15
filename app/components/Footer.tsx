@@ -6,7 +6,7 @@ export default function Footer() {
         <footer style={{ backgroundColor: 'var(--accent-dark)', color: 'white', paddingTop: '8rem', paddingBottom: '3rem' }}>
             <div className="container-wide" style={{ marginBottom: '6rem' }}>
                 <h2 style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontFamily: 'var(--font-serif)', color: 'white', marginBottom: '4rem', letterSpacing: '-0.02em', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '2rem' }}>
-                    SAYOSHOPPING
+                    SAYO SHOPPING
                 </h2>
 
                 <div className="grid grid-cols-4 footer-grid" style={{ gap: '4rem' }}>

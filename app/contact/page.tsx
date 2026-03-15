@@ -98,7 +98,7 @@ ${formData.description}`;
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                             <div>
                                 <h4 style={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--accent-dark)' }}>Boutique & Office</h4>
-                                <p style={{ color: '#888', fontSize: '1.125rem' }}>Colombo, Sri Lanka</p>
+                                <p style={{ color: '#888', fontSize: '1.125rem' }}>Wattala, Sri Lanka</p>
                             </div>
                             <div>
                                 <h4 style={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontSize: '0.875rem', marginBottom: '0.5rem', color: 'var(--accent-dark)' }}>Business Hours</h4>

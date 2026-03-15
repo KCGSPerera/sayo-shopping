@@ -219,13 +219,27 @@ export default function SupportCenter() {
             <style dangerouslySetInnerHTML={{
                 __html: `
                 @media (max-width: 1024px) {
-                    .grid-cols-4 { grid-template-columns: 1fr 1fr !important; }
+                    .container-wide { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
                     .jewellery-care-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
                 }
                 @media (max-width: 768px) {
+                    div[style*="padding: 140px 2rem"] { padding: 80px 1rem !important; }
+                    main { padding-top: 2rem !important; padding-bottom: 4rem !important; }
+                    div[style*="padding: clamp(3rem, 5vw, 6rem)"] { padding: 2rem 1.5rem !important; }
                     .grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
-                    .story-content { padding: 3rem 1.5rem !important; }
-                    .feature-grid { grid-template-columns: 1fr !important; }
+                    .jewellery-care-grid h2 { font-size: 2.25rem !important; }
+                    h3 { font-size: 1.5rem !important; }
+                    p, li { font-size: 1rem !important; }
+                    div[style*="padding: 3rem 2rem"] { padding: 2rem 1.5rem !important; }
+                    div[style*="padding: 3rem"] { padding: 2rem 1.5rem !important; }
+                    div[style*="gap: 2rem"] { gap: 1rem !important; flex-direction: column !important; }
+                }
+                @media (max-width: 350px) {
+                    div[style*="padding: clamp(3rem, 5vw, 6rem)"] { padding: 1.5rem 1rem !important; }
+                    h3 { font-size: 1.25rem !important; }
+                    .jewellery-care-grid h2 { font-size: 1.75rem !important; }
+                    p, li { font-size: 0.9rem !important; }
+                    div[style*="padding: 3rem 2rem"] { padding: 1.5rem 1rem !important; }
                 }
             `}} />
             <Footer />

@@ -17,7 +17,7 @@ export default function Navbar() {
             <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100px' }}>
 
                 {/* Logo */}
-                <Link href="/" style={{ fontSize: '1.75rem', fontFamily: 'var(--font-serif)', fontWeight: 400, letterSpacing: '0.1em' }}>
+                <Link href="/" className="nav-logo" style={{ fontSize: '1.75rem', fontFamily: 'var(--font-serif)', fontWeight: 400, letterSpacing: '0.1em' }}>
                     SAYO SHOPPING
                 </Link>
 
@@ -67,6 +67,9 @@ export default function Navbar() {
         @media (max-width: 768px) {
           .desktop-menu { display: none !important; }
           .mobile-toggle { display: block !important; }
+        }
+        @media (max-width: 350px) {
+          .nav-logo { font-size: 1.25rem !important; letter-spacing: 0.05em !important; }
         }
       `}} />
         </nav>

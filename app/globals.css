@@ -153,7 +153,15 @@ button {
 
   .container,
   .container-wide {
-    padding: 0 1.25rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 350px) {
+
+  .container,
+  .container-wide {
+    padding: 0 0.5rem;
   }
 }
 

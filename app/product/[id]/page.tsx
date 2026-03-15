@@ -92,53 +92,37 @@ Please share further details.`;
         <>
             <Navbar />
             <main className="min-h-screen container" style={{ paddingTop: '50px', paddingBottom: '100px' }}>
-                <Link href="/jewellery" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <Link href="/jewellery" className="back-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     <ArrowLeft size={16} /> Back to Collection
                 </Link>
 
-                <div className="product-layout" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '6vw', alignItems: 'start' }}>
-
+                <div className="product-layout">
                     {/* Image Gallery Section */}
-                    <div className="gallery-section" style={{ position: 'sticky', top: '140px' }}>
-                        <div className="fade-in main-image-wrapper" style={{
-                            width: '100%',
-                            aspectRatio: '3/4',
-                            backgroundColor: 'var(--accent-light)',
-                            marginBottom: '2rem',
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}>
+                    <div className="gallery-section">
+                        <div className="fade-in main-image-wrapper">
                             {mainImage ? (
                                 <Image
                                     src={mainImage}
                                     alt={product.name}
                                     fill
-                                    style={{ objectFit: 'cover', objectPosition: 'center' }}
+                                    style={{ objectFit: 'contain', objectPosition: 'center' }}
                                     priority
                                     sizes="(max-width: 1024px) 100vw, 60vw"
                                 />
                             ) : (
-                                <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#999', fontFamily: 'var(--font-serif)' }}>No Image Available</div>
+                                <div className="no-image-placeholder">No Image Available</div>
                             )}
                         </div>
 
                         {images.length > 1 && (
-                            <div className="thumbnail-grid" style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '1rem' }}>
+                            <div className="thumbnail-grid">
                                 {images.map((img, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setMainImage(img)}
                                         className="hover-lift"
                                         style={{
-                                            width: '100px',
-                                            height: '133px',
-                                            flexShrink: 0,
-                                            position: 'relative',
-                                            backgroundColor: 'var(--accent-light)',
                                             border: mainImage === img ? '2px solid var(--accent-dark)' : '1px solid transparent',
-                                            transition: 'var(--transition-smooth)',
-                                            padding: 0,
-                                            overflow: 'hidden'
                                         }}
                                         aria-label={`View image ${idx + 1}`}
                                     >
@@ -156,16 +140,16 @@ Please share further details.`;
                     </div>
 
                     {/* Product Details Section */}
-                    <div className="info-section" style={{ padding: '0' }}>
-                        <p style={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontSize: '0.875rem', color: '#888', marginBottom: '1rem' }}>
+                    <div className="info-section">
+                        <p className="category-label">
                             {product.category?.name || "Uncategorized"}
                         </p>
-                        <h1 className="product-title" style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', marginBottom: '1rem', lineHeight: 1.1 }}>{product.name}</h1>
-                        <p className="product-price" style={{ fontSize: '1.5rem', fontFamily: 'var(--font-sans)', marginBottom: '1.5rem' }}>
+                        <h1 className="product-title">{product.name}</h1>
+                        <p className="product-price">
                             Rs. {Number(product.price).toLocaleString()}
                         </p>
 
-                        <div style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div className="stock-indicator">
                             <div style={{
                                 width: '8px',
                                 height: '8px',
@@ -173,40 +157,36 @@ Please share further details.`;
                                 backgroundColor: product.quantity > 0 ? '#166534' : '#991b1b'
                             }} />
                             <span style={{
-                                fontSize: '0.875rem',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.05em',
                                 color: product.quantity > 0 ? '#166534' : '#991b1b',
-                                fontWeight: 500
                             }}>
                                 {product.quantity > 0 ? `In Stock (${product.quantity} available)` : 'Out of Stock'}
                             </span>
                         </div>
 
-                        <div style={{ height: '1px', backgroundColor: 'var(--accent-grey)', marginBottom: '2.5rem' }}></div>
+                        <div className="divider"></div>
 
                         {product.color && (
-                            <p style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', textTransform: 'uppercase', letterSpacing: '0.1rem', fontSize: '0.875rem' }}>
-                                <span style={{ color: '#888' }}>Color</span> {product.color}
+                            <p className="product-meta">
+                                <span>Color</span> {product.color}
                             </p>
                         )}
 
                         {product.code && (
-                            <p style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem', textTransform: 'uppercase', letterSpacing: '0.1rem', fontSize: '0.875rem' }}>
-                                <span style={{ color: '#888' }}>Product Code</span> {product.code}
+                            <p className="product-meta">
+                                <span>Product Code</span> {product.code}
                             </p>
                         )}
 
-                        <div style={{ marginBottom: '4rem', lineHeight: '2', color: '#555' }}>
-                            <h4 style={{ textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem', fontSize: '0.875rem', color: 'var(--accent-dark)' }}>Description & Details</h4>
+                        <div className="description-container">
+                            <h4 className="description-title">Description & Details</h4>
                             {product.description && Array.isArray(product.description) && product.description.length > 0 ? (
-                                <ul style={{ paddingLeft: '1.25rem' }}>
+                                <ul>
                                     {product.description.map((point: string, idx: number) => (
-                                        <li key={idx} style={{ marginBottom: '0.75rem', paddingLeft: '0.5rem' }}>{point}</li>
+                                        <li key={idx}>{point}</li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: '1.125rem' }}>An elegant piece crafted with precision and care to elevate your everyday style.</p>
+                                <p className="empty-description">An elegant piece crafted with precision and care to elevate your everyday style.</p>
                             )}
                         </div>
 
@@ -215,21 +195,12 @@ Please share further details.`;
                             target="_blank"
                             rel="noreferrer"
                             className="btn btn-primary whatsapp-btn"
-                            style={{
-                                width: '100%',
-                                padding: '1.5rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                border: '1px solid var(--accent-dark)',
-                                textDecoration: 'none'
-                            }}
                         >
-                            <span style={{ letterSpacing: '0.15em' }}>ORDER VIA WHATSAPP</span>
+                            <span>ORDER VIA WHATSAPP</span>
                             <ArrowRight size={20} />
                         </a>
 
-                        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.75rem', color: '#888', fontStyle: 'italic' }}>
+                        <p className="whatsapp-help">
                             Clicking this button will open WhatsApp with your order request.
                         </p>
                     </div>
@@ -239,6 +210,30 @@ Please share further details.`;
 
             <style dangerouslySetInnerHTML={{
                 __html: `
+                .product-layout { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 6vw; align-items: start; }
+                .gallery-section { position: sticky; top: 140px; }
+                .main-image-wrapper { width: 100%; aspect-ratio: 3/4; margin-bottom: 2rem; position: relative; overflow: hidden; background-color: transparent; }
+                .thumbnail-grid { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; touch-action: pan-x; }
+                .thumbnail-grid button { width: 100px; height: 133px; flex-shrink: 0; position: relative; border-radius: 4px; overflow: hidden; padding: 0; background: transparent; transition: var(--transition-smooth); }
+                .info-section { padding: 0; }
+                .category-label { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.875rem; color: #888; margin-bottom: 1rem; }
+                .product-title { font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 1rem; line-height: 1.1; }
+                .product-price { font-size: 1.5rem; font-family: var(--font-sans); margin-bottom: 1.5rem; }
+                .stock-indicator { margin-bottom: 2.5rem; display: flex; align-items: center; gap: 0.75rem; }
+                .stock-indicator span { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: inherit; font-weight: 500; }
+                .divider { height: 1px; background-color: var(--accent-grey); margin-bottom: 2.5rem; }
+                .product-meta { margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; text-transform: uppercase; letter-spacing: 0.1rem; font-size: 0.875rem; }
+                .product-meta span { color: #888; }
+                .description-container { margin-bottom: 4rem; line-height: 2; color: #555; }
+                .description-title { text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--accent-dark); }
+                .description-container ul { padding-left: 1.25rem; }
+                .description-container li { margin-bottom: 0.75rem; padding-left: 0.5rem; }
+                .empty-description { font-family: var(--font-serif); font-style: italic; font-size: 1.125rem; }
+                .whatsapp-btn { width: 100%; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--accent-dark); text-decoration: none; }
+                .whatsapp-btn span { letter-spacing: 0.15em; }
+                .whatsapp-help { text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: #888; font-style: italic; }
+                .no-image-placeholder { display: flex; height: 100%; align-items: center; justify-content: center; color: #999; font-family: var(--font-serif); }
+
                 @media (max-width: 1024px) {
                     .product-layout { grid-template-columns: 1fr !important; gap: 4rem !important; }
                     .gallery-section { position: static !important; }
@@ -246,8 +241,30 @@ Please share further details.`;
                     .main-image-wrapper { aspect-ratio: 4/5 !important; }
                 }
                 @media (max-width: 768px) {
-                    .product-title { font-size: 2.25rem !important; }
-                    .whatsapp-btn { padding: 1.25rem !important; font-size: 0.875rem !important; }
+                    main.container { padding-left: 1rem !important; padding-right: 1rem !important; overflow-X: hidden !important; }
+                    .product-layout { display: block !important; }
+                    .product-title { font-size: clamp(1.75rem, 8vw, 2.5rem) !important; margin-bottom: 0.75rem !important; }
+                    .product-price { font-size: 1.25rem !important; margin-bottom: 1rem !important; }
+                    .whatsapp-btn { padding: 1rem !important; justify-content: center !important; gap: 0.75rem !important; box-sizing: border-box !important; }
+                    .whatsapp-btn span { font-size: 0.75rem !important; letter-spacing: 0.05em !important; flex: 1; text-align: left; }
+                    .gallery-section { margin-bottom: 1.5rem !important; }
+                    .main-image-wrapper { aspect-ratio: 1/1 !important; height: auto !important; max-height: 85vw !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 1.5rem !important; }
+                    .main-image-wrapper img { object-fit: contain !important; }
+                    .thumbnail-grid { gap: 0.5rem !important; touch-action: pan-x !important; padding-bottom: 0.5rem !important; }
+                    .thumbnail-grid button { width: 70px !important; height: 93px !important; }
+                    .description-container ul { list-style-position: inside !important; padding-left: 0 !important; }
+                    .description-container li { margin-bottom: 1rem !important; padding-left: 0 !important; }
+                }
+                @media (max-width: 350px) {
+                    main.container { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+                    .back-link { font-size: 0.75rem !important; margin-bottom: 1.5rem !important; }
+                    .product-title { font-size: 1.5rem !important; }
+                    .whatsapp-btn { padding: 0.875rem 0.6rem !important; gap: 0.4rem !important; }
+                    .whatsapp-btn span { font-size: 0.625rem !important; letter-spacing: 0px !important; }
+                    .info-section { word-break: break-all !important; }
+                    .description-container li { font-size: 0.9rem !important; margin-bottom: 0.75rem !important; }
+                    .main-image-wrapper { max-height: 75vw !important; width: 95% !important; }
+                    .stock-indicator span { font-size: 0.75rem !important; }
                 }
             `}} />
         </>

@@ -175,6 +175,27 @@ export default function PrivacyPolicy() {
                 </div>
             </main>
             <Footer />
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @media (max-width: 1024px) {
+                    .container-wide { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+                }
+                @media (max-width: 768px) {
+                    div[style*="padding: 140px 2rem"] { padding: 80px 1rem !important; }
+                    main { padding-top: 2rem !important; padding-bottom: 4rem !important; }
+                    div[style*="padding: clamp(3rem, 5vw, 6rem)"] { padding: 2rem 1.5rem !important; }
+                    section { padding-left: 1rem !important; }
+                    h3 { font-size: 1.5rem !important; }
+                    p, li { font-size: 1rem !important; }
+                    div[style*="padding: 4rem"] { padding: 2rem 1.5rem !important; }
+                }
+                @media (max-width: 350px) {
+                    div[style*="padding: clamp(3rem, 5vw, 6rem)"] { padding: 1.5rem 1rem !important; }
+                    h3 { font-size: 1.25rem !important; }
+                    p, li { font-size: 0.9rem !important; }
+                    section { padding-left: 0.75rem !important; }
+                }
+            `}} />
         </div>
     );
 }

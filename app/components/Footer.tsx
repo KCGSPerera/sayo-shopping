@@ -5,7 +5,7 @@ export default function Footer() {
     return (
         <footer style={{ backgroundColor: 'var(--accent-dark)', color: 'white', paddingTop: '8rem', paddingBottom: '3rem' }}>
             <div className="container-wide" style={{ marginBottom: '6rem' }}>
-                <h2 style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontFamily: 'var(--font-serif)', color: 'white', marginBottom: '4rem', letterSpacing: '-0.02em', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '2rem' }}>
+                <h2 className="footer-logo" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontFamily: 'var(--font-serif)', color: 'white', marginBottom: '4rem', letterSpacing: '-0.02em', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '2rem' }}>
                     SAYO SHOPPING
                 </h2>
 
@@ -70,6 +70,10 @@ export default function Footer() {
                   .footer-section { padding-right: 0 !important; }
                   .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
                   .footer-socials { justify-content: flex-start; }
+                }
+                @media (max-width: 350px) {
+                  .footer-logo { font-size: 2.5rem !important; margin-bottom: 2rem !important; }
+                  .footer-bottom { font-size: 0.75rem !important; }
                 }
             `}} />
         </footer>

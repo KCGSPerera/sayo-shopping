@@ -45,7 +45,9 @@ export default function FeaturedProductsAdmin() {
                     const index = item.slot - 1;
                     if (index >= 0 && index < 3) {
                         newSlots[index] = {
-                            ...item,
+                            slot: item.slot,
+                            productId: item.product_id,
+                            imageUrl: item.image_url,
                             product: item.product
                         };
                     }

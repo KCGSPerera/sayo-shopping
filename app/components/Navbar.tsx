@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 import { Menu, X, ShoppingBag } from "lucide-react";
 
 export default function Navbar() {
@@ -17,8 +18,16 @@ export default function Navbar() {
             <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100px' }}>
 
                 {/* Logo */}
-                <Link href="/" className="nav-logo" style={{ fontSize: '1.75rem', fontFamily: 'var(--font-serif)', fontWeight: 400, letterSpacing: '0.1em' }}>
-                    SAYO SHOPPING
+                <Link href="/" className="nav-logo" style={{ display: 'flex', alignItems: 'center', transition: 'var(--transition-smooth)' }}>
+                    <Image
+                        src="/assets/logo/sayo-shopping-logo.png"
+                        alt="Sayo Shopping Logo"
+                        width={240}
+                        height={120}
+                        priority
+                        className="logo-img"
+                        style={{ objectFit: 'contain', width: 'auto', maxHeight: '70px' }}
+                    />
                 </Link>
 
                 {/* Desktop Menu */}
@@ -69,7 +78,7 @@ export default function Navbar() {
           .mobile-toggle { display: block !important; }
         }
         @media (max-width: 350px) {
-          .nav-logo { font-size: 1.25rem !important; letter-spacing: 0.05em !important; }
+          .logo-img { max-height: 50px !important; }
         }
       `}} />
         </nav>

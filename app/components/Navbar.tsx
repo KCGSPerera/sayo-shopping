@@ -18,7 +18,7 @@ export default function Navbar() {
             <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100px' }}>
 
                 {/* Logo */}
-                <Link href="/" className="nav-logo" style={{ display: 'flex', alignItems: 'center', transition: 'var(--transition-smooth)' }}>
+                <Link href="/" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', transition: 'var(--transition-smooth)' }}>
                     <Image
                         src="/assets/logo/sayo-shopping-logo.png"
                         alt="Sayo Shopping Logo"
@@ -28,6 +28,17 @@ export default function Navbar() {
                         className="logo-img"
                         style={{ objectFit: 'contain', width: 'auto', maxHeight: '70px' }}
                     />
+                    <span className="brand-name" style={{ 
+                        fontFamily: 'var(--font-serif)', 
+                        fontSize: '1.5rem', 
+                        fontWeight: 400, 
+                        letterSpacing: '0.1em', 
+                        textTransform: 'uppercase',
+                        color: 'var(--foreground)',
+                        lineHeight: 1
+                    }}>
+                        SAYO SHOPPING
+                    </span>
                 </Link>
 
                 {/* Desktop Menu */}
@@ -76,9 +87,11 @@ export default function Navbar() {
         @media (max-width: 768px) {
           .desktop-menu { display: none !important; }
           .mobile-toggle { display: block !important; }
+          .brand-name { fontSize: 1.125rem !important; }
         }
         @media (max-width: 350px) {
           .logo-img { max-height: 50px !important; }
+          .brand-name { fontSize: 0.875rem !important; }
         }
       `}} />
         </nav>

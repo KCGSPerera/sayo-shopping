@@ -5,7 +5,8 @@ import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-    title: "Privacy Policy | Sayoshopping",
+    title: "Privacy Policy | Your Data Security | Sayoshopping",
+    description: "Read the Sayo Shopping Privacy Policy. Learn how we protect your personal information and ensure a secure luxury shopping experience.",
 };
 
 export default function PrivacyPolicy() {

@@ -1,0 +1,181 @@
+"use client";
+
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
+import { supabase } from "@/lib/supabase";
+import { useSearchParams } from "next/navigation";
+
+function JewelleryContent() {
+    const [products, setProducts] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const initialCategory = searchParams.get('category');
+
+    // Filters
+    const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("all");
+    const [colorFilter, setColorFilter] = useState("all");
+    // Simple price range mockup
+    const [priceSort, setPriceSort] = useState("none");
+
+    useEffect(() => {
+        async function fetchData() {
+            // Fetch categories
+            const { data: cats } = await supabase.from('categories').select('*');
+            if (cats) {
+                setCategories(cats);
+
+                // Handle initial category filter from URL name
+                if (initialCategory) {
+                    const matchedCat = cats.find(c => c.name.toLowerCase() === initialCategory.toLowerCase());
+                    if (matchedCat) {
+                        setCategoryFilter(matchedCat.id);
+                    }
+                }
+            }
+
+            // Fetch products with their primary image
+            const { data: prods } = await supabase
+                .from('products')
+                .select(`
+          *,
+          product_images (image_url)
+        `)
+                .eq('is_active', true);
+
+            if (prods) setProducts(prods);
+            setLoading(false);
+        }
+        fetchData();
+    }, [initialCategory]);
+
+    const filteredProducts = products.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
+        const matchesCategory = categoryFilter === "all" || p.category_id === categoryFilter;
+        const matchesColor = colorFilter === "all" || (p.color && p.color.toLowerCase() === colorFilter.toLowerCase());
+        return matchesSearch && matchesCategory && matchesColor;
+    }).sort((a, b) => {
+        if (priceSort === "low") return a.price - b.price;
+        if (priceSort === "high") return b.price - a.price;
+        return 0;
+    });
+
+    // Extract unique colors for filter
+    const uniqueColors = Array.from(new Set(products.map(p => p.color).filter(Boolean)));
+
+    return (
+        <>
+            <Navbar />
+            <main className="min-h-screen py-section container">
+                <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '4rem' }}>
+                    <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', marginBottom: '2rem', letterSpacing: '-0.02em' }}>The Collection</h1>
+
+                    {/* Horizontal Elegant Filters */}
+                    <div className="filter-bar" style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'center', borderTop: '1px solid var(--accent-grey)', borderBottom: '1px solid var(--accent-grey)', padding: '1.5rem 0' }}>
+                        <div className="search-container" style={{ flex: '1 1 200px' }}>
+                            <input
+                                type="text"
+                                placeholder="Search pieces..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                style={{ border: 'none', borderBottom: '1px solid var(--foreground)', padding: '0.5rem 0', outline: 'none', fontSize: '1rem', width: '250px', background: 'transparent' }}
+                                className="search-input"
+                            />
+                        </div>
+
+                        <div className="select-container" style={{ display: 'flex', gap: '2rem', flex: 1, justifyContent: 'flex-end' }}>
+                            <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} style={{ border: 'none', borderBottom: '1px solid var(--accent-grey)', padding: '0.5rem 0', outline: 'none', background: 'transparent', cursor: 'pointer', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em' }}>
+                                <option value="all">Category</option>
+                                {categories.map(c => (
+                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                ))}
+                            </select>
+
+                            <select value={colorFilter} onChange={(e) => setColorFilter(e.target.value)} style={{ border: 'none', borderBottom: '1px solid var(--accent-grey)', padding: '0.5rem 0', outline: 'none', background: 'transparent', cursor: 'pointer', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em' }}>
+                                <option value="all">Color</option>
+                                {uniqueColors.map(color => (
+                                    <option key={color as string} value={color as string}>{color}</option>
+                                ))}
+                            </select>
+
+                            <select value={priceSort} onChange={(e) => setPriceSort(e.target.value)} style={{ border: 'none', borderBottom: '1px solid var(--accent-grey)', padding: '0.5rem 0', outline: 'none', background: 'transparent', cursor: 'pointer', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em' }}>
+                                <option value="none">Sort</option>
+                                <option value="low">Lowest Price</option>
+                                <option value="high">Highest Price</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Product Grid */}
+                    {loading ? (
+                        <div className="text-center" style={{ padding: '8rem 0', fontSize: '1.25rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Curating Collection...</div>
+                    ) : filteredProducts.length === 0 ? (
+                        <div className="text-center" style={{ padding: '8rem 0', color: '#666', fontSize: '1.125rem' }}>No pieces found matching your criteria.</div>
+                    ) : (
+                        <div className="grid grid-cols-3 product-grid" style={{ gap: '4rem 2rem' }}>
+                            {filteredProducts.map((product) => {
+                                const primaryImage = product.product_images && product.product_images.length > 0
+                                    ? product.product_images[0].image_url
+                                    : null;
+
+                                return (
+                                    <Link href={`/product/${product.id}`} key={product.id} className="hover-lift group fade-in" style={{ display: 'block' }}>
+                                        <div className="hover-zoom" style={{
+                                            backgroundColor: 'var(--accent-light)',
+                                            aspectRatio: '3/4',
+                                            marginBottom: '1.5rem',
+                                            overflow: 'hidden'
+                                        }}>
+                                            <div className="bg-image" style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                backgroundImage: primaryImage ? `url(${primaryImage})` : 'none',
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                                transition: 'transform 0.8s ease'
+                                            }}>
+                                                {!primaryImage && <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#999', fontFamily: 'var(--font-serif)' }}>No Image</div>}
+                                            </div>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                            <h3 style={{ fontSize: '1.25rem', margin: 0, paddingRight: '1rem', lineHeight: 1.3 }}>
+                                                {product.name}
+                                            </h3>
+                                            <p style={{ color: 'var(--foreground)', fontSize: '1rem', whiteSpace: 'nowrap', borderBottom: '1px solid black' }}>Rs. {Number(product.price).toLocaleString()}</p>
+                                        </div>
+                                        <p style={{ color: '#888', marginTop: '0.5rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: '0.875rem' }}>
+                                            {product.color || 'Classic Collection'}
+                                        </p>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    @media (max-width: 768px) {
+                        .filter-bar { flex-direction: column; align-items: stretch !important; gap: 1.5rem !important; }
+                        .search-container { flex: none !important; }
+                        .search-input { width: 100% !important; }
+                        .select-container { justify-content: space-between !important; flex: none !important; gap: 1rem !important; }
+                        .select-container select { flex: 1; min-width: 0; }
+                        .product-grid { gap: 2.5rem 1rem !important; }
+                    }
+                `}} />
+            </main>
+            <Footer />
+        </>
+    );
+}
+
+export default function JewelleryClient() {
+    return (
+        <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>}>
+            <JewelleryContent />
+        </Suspense>
+    );
+}

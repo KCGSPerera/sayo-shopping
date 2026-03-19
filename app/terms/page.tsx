@@ -5,7 +5,8 @@ import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-    title: "Terms & Conditions | Sayoshopping",
+    title: "Terms & Conditions | Service Agreement | Sayoshopping",
+    description: "Review the Terms and Conditions of Sayo Shopping. Understand our service agreement, product descriptions, and customer commitments.",
 };
 
 export default function TermsAndConditions() {

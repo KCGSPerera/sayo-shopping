@@ -5,7 +5,8 @@ import Image from "next/image";
 import { ArrowLeft, MessageCircle, ShoppingBag, CreditCard, RefreshCw, Gem, Sparkles, HelpCircle, ShieldCheck } from "lucide-react";
 
 export const metadata = {
-    title: "Support Center | Sayoshopping",
+    title: "Support Center | Customer Assistance | Sayoshopping",
+    description: "Visit the Sayo Shopping Support Center for help with orders, payments, delivery, and jewellery care tips.",
 };
 
 export default function SupportCenter() {

@@ -5,7 +5,12 @@ import Image from "next/image";
 import { Gem, ShieldCheck, Sparkles, Star, Tag, Truck, Headset } from "lucide-react";
 
 export const metadata = {
-    title: "About Us | Sayoshopping",
+    title: "Our Story | Luxury Jewellery Heritage | Sayoshopping",
+    description: "Learn about Sayoshopping's heritage of elegance and superior craftsmanship. Discover our commitment to bringing timeless luxury jewellery to our discerning clientele.",
+    openGraph: {
+        title: "Our Story | Sayoshopping Heritage",
+        description: "Experience the history and craftsmanship behind Sayoshopping's luxury jewellery.",
+    }
 };
 
 export default function About() {

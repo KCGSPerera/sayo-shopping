@@ -5,7 +5,8 @@ import Image from "next/image";
 import { ArrowLeft, Package, Truck, Banknote, Clock, MapPin, AlertCircle, HelpCircle } from "lucide-react";
 
 export const metadata = {
-    title: "Shipping & Delivery | Sayoshopping",
+    title: "Shipping & Delivery | Islandwide Service | Sayoshopping",
+    description: "Find information about shipping rates, delivery times, and islandwide coverage for your luxury jewellery orders at Sayoshopping.",
 };
 
 export default function Shipping() {

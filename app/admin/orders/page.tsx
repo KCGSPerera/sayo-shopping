@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Plus, Edit, Trash2, Eye, X } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, X, ChevronDown, Search } from "lucide-react";
 
 export default function Orders() {
     const [orders, setOrders] = useState<any[]>([]);
@@ -14,6 +14,14 @@ export default function Orders() {
     // View Modal State
     const [isViewOpen, setIsViewOpen] = useState(false);
     const [viewOrder, setViewOrder] = useState<any>(null);
+
+    // Searchable dropdown state
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [productSearch, setProductSearch] = useState("");
+
+    // Search and filter state
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("All");
 
     // Form State
     const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
@@ -41,6 +49,8 @@ export default function Orders() {
     };
 
     const handleOpenModal = (order: any = null) => {
+        setIsDropdownOpen(false);
+        setProductSearch("");
         if (order) {
             setCurrentOrderId(order.id);
             setFormData({
@@ -74,6 +84,45 @@ export default function Orders() {
             product_id: prodId,
             price: prod ? prod.price.toString() : formData.price
         });
+    };
+
+    const handleInputFocus = () => {
+        const selectedProduct = products.find(p => p.id === formData.product_id);
+        setProductSearch(selectedProduct ? `${selectedProduct.code ? `[${selectedProduct.code}] ` : ''}${selectedProduct.name}` : "");
+        setIsDropdownOpen(true);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setProductSearch(e.target.value);
+        setIsDropdownOpen(true);
+    };
+
+    const selectProduct = (p: any) => {
+        setFormData({
+            ...formData,
+            product_id: p.id,
+            price: p.price.toString()
+        });
+        setProductSearch(`${p.code ? `[${p.code}] ` : ''}${p.name}`);
+        setIsDropdownOpen(false);
+    };
+
+    const selectProductNone = () => {
+        setFormData({
+            ...formData,
+            product_id: "",
+            price: formData.price
+        });
+        setProductSearch("");
+        setIsDropdownOpen(false);
+    };
+
+    const getDisplayValue = () => {
+        if (isDropdownOpen) {
+            return productSearch;
+        }
+        const selectedProduct = products.find(p => p.id === formData.product_id);
+        return selectedProduct ? `${selectedProduct.code ? `[${selectedProduct.code}] ` : ''}${selectedProduct.name}` : "";
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -147,6 +196,29 @@ export default function Orders() {
         }
     };
 
+    const filteredOrders = orders.filter(order => {
+        if (statusFilter !== "All" && order.order_status !== statusFilter) {
+            return false;
+        }
+
+        if (searchTerm.trim() !== "") {
+            const term = searchTerm.toLowerCase();
+            const customerName = order.customer_name?.toLowerCase() || "";
+            const phone = order.phone?.toLowerCase() || "";
+            const productName = order.product?.name?.toLowerCase() || "";
+            const productCode = order.product?.code?.toLowerCase() || "";
+
+            return (
+                customerName.includes(term) ||
+                phone.includes(term) ||
+                productName.includes(term) ||
+                productCode.includes(term)
+            );
+        }
+
+        return true;
+    });
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -154,6 +226,42 @@ export default function Orders() {
                 <button onClick={() => handleOpenModal()} className="btn btn-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <Plus size={18} /> Add Order
                 </button>
+            </div>
+
+            {/* Search and Filter Controls */}
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
+                    <input 
+                        type="text" 
+                        placeholder="Search customer, phone, product..." 
+                        value={searchTerm} 
+                        onChange={e => setSearchTerm(e.target.value)} 
+                        className="form-input" 
+                        style={{ backgroundColor: 'white', paddingLeft: '2.5rem' }}
+                    />
+                    <div style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#666', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+                        <Search size={18} />
+                    </div>
+                </div>
+                <div style={{ position: 'relative', width: '100%', maxWidth: '200px' }}>
+                    <select 
+                        value={statusFilter} 
+                        onChange={e => setStatusFilter(e.target.value)} 
+                        className="form-input" 
+                        style={{ backgroundColor: 'white', paddingRight: '2.5rem', appearance: 'none', WebkitAppearance: 'none' }}
+                    >
+                        <option value="All">All Statuses</option>
+                        <option value="Placed">Placed</option>
+                        <option value="Packed">Packed</option>
+                        <option value="Courier">Courier</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <div style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#666', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+                        <ChevronDown size={18} />
+                    </div>
+                </div>
             </div>
 
             <div style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: 'var(--shadow-subtle)', overflowX: 'auto' }}>
@@ -171,10 +279,12 @@ export default function Orders() {
                     <tbody>
                         {loading ? (
                             <tr><td colSpan={6} style={{ padding: '2rem', textAlign: 'center' }}>Loading...</td></tr>
-                        ) : orders.length === 0 ? (
-                            <tr><td colSpan={6} style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>No orders found</td></tr>
+                        ) : filteredOrders.length === 0 ? (
+                            <tr><td colSpan={6} style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+                                {orders.length === 0 ? "No orders found" : "No matching orders found"}
+                            </td></tr>
                         ) : (
-                            orders.map(order => (
+                            filteredOrders.map(order => (
                                 <tr key={order.id} style={{ borderBottom: '1px solid var(--accent-grey)' }}>
                                     <td style={{ padding: '1rem' }}>
                                         <div style={{ fontWeight: 500 }}>{order.customer_name}</div>
@@ -324,14 +434,107 @@ export default function Orders() {
                             <div className="grid grid-cols-2" style={{ gap: '1rem' }}>
                                 <div className="form-group">
                                     <label className="form-label">Product</label>
-                                    <select className="form-input" value={formData.product_id} onChange={handleProductChange} style={{ backgroundColor: 'white' }}>
-                                        <option value="">Select a product...</option>
-                                        {products.map(p => (
-                                            <option key={p.id} value={p.id}>
-                                                {p.code ? `[${p.code}] ` : ''}{p.name} ({p.quantity} in stock)
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div style={{ position: 'relative' }}>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            placeholder="Select a product..."
+                                            value={getDisplayValue()}
+                                            onFocus={handleInputFocus}
+                                            onChange={handleSearchChange}
+                                            style={{ backgroundColor: 'white', paddingRight: '2.5rem' }}
+                                        />
+                                        <div style={{
+                                            position: 'absolute',
+                                            right: '0.75rem',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            pointerEvents: 'none',
+                                            color: '#666',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}>
+                                            <ChevronDown size={18} />
+                                        </div>
+
+                                        {isDropdownOpen && (
+                                            <>
+                                                <div
+                                                    style={{ position: 'fixed', inset: 0, zIndex: 40 }}
+                                                    onClick={() => setIsDropdownOpen(false)}
+                                                />
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    zIndex: 50,
+                                                    width: '100%',
+                                                    maxHeight: '200px',
+                                                    overflowY: 'auto',
+                                                    border: '1px solid var(--accent-grey)',
+                                                    backgroundColor: 'white',
+                                                    borderRadius: 'var(--border-radius)',
+                                                    marginTop: '4px',
+                                                    boxShadow: 'var(--shadow-subtle)'
+                                                }}>
+                                                    {productSearch === "" && (
+                                                        <div
+                                                            onClick={selectProductNone}
+                                                            className="product-dropdown-item"
+                                                            style={{
+                                                                color: '#666',
+                                                                backgroundColor: formData.product_id === "" ? 'var(--accent-light)' : 'transparent',
+                                                            }}
+                                                        >
+                                                            Select a product...
+                                                        </div>
+                                                    )}
+                                                    {products
+                                                        .filter(p => {
+                                                            const term = productSearch.toLowerCase();
+                                                            const nameMatch = p.name?.toLowerCase().includes(term);
+                                                            const codeMatch = p.code?.toLowerCase().includes(term);
+                                                            return nameMatch || codeMatch;
+                                                        })
+                                                        .map(p => (
+                                                            <div
+                                                                key={p.id}
+                                                                onClick={() => selectProduct(p)}
+                                                                className="product-dropdown-item"
+                                                                style={{
+                                                                    backgroundColor: formData.product_id === p.id ? 'var(--accent-light)' : 'transparent',
+                                                                }}
+                                                            >
+                                                                {p.code ? `[${p.code}] ` : ''}{p.name} ({p.quantity} in stock)
+                                                            </div>
+                                                        ))
+                                                    }
+                                                    {products.filter(p => {
+                                                        const term = productSearch.toLowerCase();
+                                                        const nameMatch = p.name?.toLowerCase().includes(term);
+                                                        const codeMatch = p.code?.toLowerCase().includes(term);
+                                                        return nameMatch || codeMatch;
+                                                    }).length === 0 && (
+                                                        <div style={{ padding: '0.75rem', color: '#666', fontSize: '0.875rem' }}>
+                                                            No products found
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                    <style>{`
+                                        .product-dropdown-item {
+                                            padding: 0.75rem;
+                                            cursor: pointer;
+                                            border-bottom: 1px solid var(--accent-grey);
+                                            transition: background-color 0.2s;
+                                        }
+                                        .product-dropdown-item:hover {
+                                            background-color: var(--accent-light);
+                                        }
+                                        .product-dropdown-item:last-child {
+                                            border-bottom: none;
+                                        }
+                                    `}</style>
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Price</label>

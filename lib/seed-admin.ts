@@ -17,6 +17,8 @@ async function seedAdmin() {
 
     console.log(`Attempting to seed admin: ${adminEmail}`);
 
+    let authUserId: string | undefined = undefined;
+
     try {
         // 1. Create/Update user in Supabase Auth
         if (hasServiceKey && supabaseUrl) {
@@ -38,6 +40,7 @@ async function seedAdmin() {
                     const existingUser = users?.users.find(u => u.email === adminEmail);
 
                     if (existingUser) {
+                        authUserId = existingUser.id;
                         const { error: updateError } = await supabase.auth.admin.updateUserById(
                             existingUser.id,
                             { password: adminPassword, email_confirm: true }
@@ -56,20 +59,45 @@ async function seedAdmin() {
                 }
             } else {
                 console.log('Successfully created user in Supabase Auth.');
+                if (authData.user) {
+                    authUserId = authData.user.id;
+                }
             }
         } else {
             console.warn('⚠️ SUPABASE_SERVICE_ROLE_KEY is missing or placeholder. Skipping Auth user creation.');
         }
 
-        // 2. Insert into admins table using Prisma
-        await prisma.admin.upsert({
-            where: { email: adminEmail },
-            update: { role: 'admin' },
-            create: {
-                email: adminEmail,
-                role: 'admin'
-            }
+        // 2. Insert into admins table using Prisma, ensuring ID matches auth.users
+        const existingAdmin = await prisma.admin.findUnique({
+            where: { email: adminEmail }
         });
+
+        if (existingAdmin) {
+            if (authUserId && existingAdmin.id !== authUserId) {
+                console.log('ID mismatch detected. Re-creating admin entry with correct auth ID...');
+                await prisma.admin.delete({ where: { email: adminEmail } });
+                await prisma.admin.create({
+                    data: {
+                        id: authUserId,
+                        email: adminEmail,
+                        role: 'admin'
+                    }
+                });
+            } else {
+                await prisma.admin.update({
+                    where: { email: adminEmail },
+                    data: { role: 'admin' }
+                });
+            }
+        } else {
+            await prisma.admin.create({
+                data: {
+                    ...(authUserId ? { id: authUserId } : {}),
+                    email: adminEmail,
+                    role: 'admin'
+                }
+            });
+        }
 
         console.log('Successfully added/updated admins table via Prisma.');
     } catch (error) {
